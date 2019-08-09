@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable name="viewModel" type="me.luowl.wan.base.BaseViewModel"/>
+        <import type="android.view.View"/>
+    </data>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:background="@color/wall"
+                 android:visibility="@{viewModel.stateModel.success?View.GONE:View.VISIBLE}">
+        <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="64dp"
+                android:indeterminate="true"
+                android:visibility="@{viewModel.stateModel.loading?View.VISIBLE:View.GONE}"/>
+
+        <LinearLayout
+                android:id="@+id/noContentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.stateModel.empty?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="88dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/no_content_image"/>
+
+            <TextView
+                    android:id="@+id/noContentText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="没有更多内容了"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:id="@+id/badNetworkRootView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.stateModel.badNetwork?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                    android:layout_width="74dp"
+                    android:layout_height="88dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/bad_network_image"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/bad_network_view_tip"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:id="@+id/loadDataErrorView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:onClick="@{()->viewModel.retry()}"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.stateModel.error?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                    android:layout_width="74dp"
+                    android:layout_height="88dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/bad_network_image"/>
+
+            <TextView
+                    android:id="@+id/loadErrorText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="加载失败了"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"/>
+        </LinearLayout>
+    </FrameLayout>
+</layout>

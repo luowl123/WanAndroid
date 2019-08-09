@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="viewModel" type="me.luowl.wan.ui.account.MineViewModel"/>
+        <import type="android.view.View"/>
+    </data>
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/app_divider">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <RelativeLayout android:layout_width="match_parent"
+                            android:layout_height="180dp"
+                            android:background="@color/appThemeColor"
+                            android:orientation="vertical">
+                <ImageView android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:src="@mipmap/bg_mine_top"/>
+
+                <ImageView android:id="@+id/user_img"
+                           android:layout_width="80dp"
+                           android:layout_height="80dp"
+                           android:layout_centerVertical="true"
+                           android:layout_marginLeft="20dp"
+                           android:src="@mipmap/user_default_img"/>
+
+                <TextView
+                        android:id="@+id/username_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_toRightOf="@+id/user_img"
+                        android:text="@string/not_login"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_14"/>
+            </RelativeLayout>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="@dimen/dp_10"
+            />
+
+            <LinearLayout
+                    android:id="@+id/collection_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/selector_list_item_bg"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/app_page_padding"
+                    android:paddingRight="@dimen/app_page_padding">
+                <ImageView android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_gravity="center_vertical"
+                           android:src="@mipmap/ic_collection"/>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical"
+                          android:paddingLeft="@dimen/app_page_padding"
+                          android:text="@string/my_collection"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/text_size_14"/>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="20dp"/>
+
+            <LinearLayout
+                    android:id="@+id/feedback_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/selector_list_item_bg"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/app_page_padding"
+                    android:paddingRight="@dimen/app_page_padding">
+                <ImageView android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_gravity="center_vertical"
+                           android:src="@mipmap/ic_feedback"/>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical"
+                          android:paddingLeft="@dimen/app_page_padding"
+                          android:text="@string/text_feedback"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/text_size_14"/>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"/>
+
+            <LinearLayout
+                    android:id="@+id/about_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/selector_list_item_bg"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/app_page_padding"
+                    android:paddingRight="@dimen/app_page_padding">
+                <ImageView android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_gravity="center_vertical"
+                           android:src="@mipmap/ic_about"/>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical"
+                          android:paddingLeft="@dimen/app_page_padding"
+                          android:text="@string/text_about"
+                          android:textColor="@color/black"
+                          android:textSize="@dimen/text_size_14"/>
+            </LinearLayout>
+
+            <View android:layout_width="match_parent"
+                  android:layout_height="1dp"/>
+
+            <Button
+                    android:id="@+id/logout_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:onClick="@{()->viewModel.logout()}"
+                    android:text="@string/logout"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14"
+                    android:visibility="@{viewModel.login?View.VISIBLE:View.GONE}"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

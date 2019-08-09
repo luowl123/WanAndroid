@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0172e5</color>
+    <color name="colorPrimaryDark">#0172e5</color>
+    <color name="colorAccent">#0172e5</color>
+
+    <color name="appThemeColor">#007fff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="red">#FD544F</color>
+    <color name="color_6">#666666</color>
+    <color name="color_3">#333333</color>
+    <color name="app_divider">#F4F6F9</color>
+    <color name="black_transparent">#40000000</color>
+    <color name="navigation_tab_bg">#f5f5f5</color>
+    <color name="half_white">#80FFFFFF</color>
+    <color name="secondary_text">#757575</color>
+    <color name="wall">#fff5f5f5</color>
+
+    <array name="chapter_colors">
+        <item>#F08080</item>
+        <item>#FFB6C1</item>
+        <item>#FFC125</item>
+        <item>#F28300</item>
+        <item>#90EE90</item>
+        <item>#7FFFD4</item>
+        <item>#7EC0EE</item>
+        <item>#3CB371</item>
+        <item>#FFE4C4</item>
+        <item>#E6E6FA</item>
+        <item>#B4EEB4</item>
+        <item>#FF5E8B</item>
+        <item>#FF7C9E</item>
+        <item>#FE76C8</item>
+        <item>#9171ED</item>
+        <item>#7380F9</item>
+        <item>#4790EA</item>
+        <item>#39AEEA</item>
+        <item>#1EC392</item>
+        <item>#2BB568</item>
+        <item>#69CA19</item>
+        <item>#E3AB13</item>
+        <item>#FD716D</item>
+        <item>#FD544F</item>
+    </array>
+</resources>

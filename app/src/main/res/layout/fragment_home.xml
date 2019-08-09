@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="viewModel" type="me.luowl.wan.ui.home.HomeViewModel"/>
+        <import type="android.view.View"/>
+    </data>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_home_title_height"
+                android:background="@color/appThemeColor"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_8"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_8">
+            <TextView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/shape_search"
+                    android:drawableLeft="@mipmap/icon_search"
+                    android:drawablePadding="@dimen/dp_10"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:text="@string/search_tint"
+                    android:textColor="@color/half_white"
+                    android:textSize="@dimen/text_size_16"/>
+        </LinearLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:onRefresh="@{()->viewModel.startRefresh()}"
+                app:refreshing="@{viewModel.refreshing}">
+            <FrameLayout android:layout_width="match_parent"
+                         android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                <include layout="@layout/page_state_view"
+                         app:viewModel="@{viewModel}"/>
+            </FrameLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    </LinearLayout>
+</layout>

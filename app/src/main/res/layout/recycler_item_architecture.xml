@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable name="data" type="me.luowl.wan.data.model.Architecture"/>
+        <variable name="position" type="Integer"/>
+        <variable name="currentPosition" type="Integer"/>
+    </data>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:paddingLeft="@dimen/app_page_padding"
+                  android:paddingRight="@dimen/app_page_padding"
+                  android:orientation="vertical">
+       <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/dp_12"
+                android:paddingBottom="@dimen/dp_12"
+                android:text="@{data.name}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dp_12"
+                android:text="@{data.childrenNames}"
+                android:textColor="#666666"
+                android:textSize="@dimen/text_size_12"/>
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable name="data" type="me.luowl.wan.data.model.Navigation"/>
+        <variable name="currentPosition" type="Integer"/>
+        <variable name="position" type="Integer"/>
+    </data>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@{currentPosition==position?@color/white:@color/navigation_tab_bg}"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/dp_12"
+              android:paddingBottom="@dimen/dp_12"
+              android:text="@{data.name}"
+              android:textColor="@color/black"
+              android:textSize="@dimen/text_size_16"/>
+</layout>
