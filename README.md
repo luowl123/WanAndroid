@@ -23,6 +23,7 @@
 #### 截图
 
 ![搜索](https://github.com/luowl123/WanAndroid/blob/master/screenshots/Screenshot_01.jpg =200x300)
+<img src="https://github.com/luowl123/WanAndroid/blob/master/screenshots/Screenshot_01.jpg" width="500" hegiht="313" align=center />
 ![首页](https://github.com/luowl123/WanAndroid/blob/master/screenshots/Screenshot_02.jpg =200x300)
 ![项目](https://github.com/luowl123/WanAndroid/blob/master/screenshots/Screenshot_03.jpg =200x300)
 
