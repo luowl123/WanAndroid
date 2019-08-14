@@ -6,7 +6,10 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.tencent.sonic.sdk.SonicConfig
+import com.tencent.sonic.sdk.SonicEngine
 import me.luowl.wan.base.AppManager
+import me.luowl.wan.ui.webview.SonicRuntimeImpl
 import me.luowl.wan.util.logDebug
 
 
@@ -26,6 +29,10 @@ class WanApplication : Application() {
             .lifecycleObserverAlwaysActive(true)
             .autoClear(false)
         setApplication(this)
+        // init sonic engine if necessary, or maybe u can do this when application created
+        if (!SonicEngine.isGetInstanceAllowed()) {
+            SonicEngine.createInstance(SonicRuntimeImpl(this), SonicConfig.Builder().build())
+        }
     }
 
     private fun setApplication(app: Application) {
