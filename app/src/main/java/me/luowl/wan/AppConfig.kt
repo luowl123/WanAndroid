@@ -13,20 +13,17 @@ import me.luowl.wan.util.Preference
 
 object AppConfig {
     const val DEFAULT_TIMEOUT: Long = 15
-    const val SAVE_USER_LOGIN_KEY = "user/login"
-    const val SAVE_USER_REGISTER_KEY = "user/register"
 
-    const val COLLECTIONS_WEBSITE = "lg/collect"
-    const val UNCOLLECTIONS_WEBSITE = "lg/uncollect"
-    const val ARTICLE_WEBSITE = "article"
-    const val TODO_WEBSITE = "lg/todo"
+    const val SAVE_WAN_ANDROID_COOKIE = "save_wan_android_cookie"
+    const val HEADER_SAVE_WAN_ANDROID_COOKIE = "save_wan_android_cookie:true"
+
+    const val ADD_WAN_ANDROID_COOKIE = "add_wan_android_cookie"
+    const val HEADER_AND_WAN_ANDROID_COOKIE = "add_wan_android_cookie:true"
 
     const val SET_COOKIE_KEY = "set-cookie"
     const val COOKIE_NAME = "Cookie"
 
     const val MAX_CACHE_SIZE: Long = 1024 * 1024 * 50 // 50M 的缓存大小
-
-    const val ARTICLE_COLLECT="article_collect"
 
     fun encodeCookie(cookies: List<String>): String {
         val sb = StringBuilder()
@@ -92,7 +89,6 @@ object AppConfig {
         pwd=""
         token=""
         Preference.clearPreference()
-//        CookieManager().clearAllCookies()
     }
 
 }

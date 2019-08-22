@@ -1,6 +1,5 @@
 package me.luowl.wan.http
 
-import me.luowl.wan.http.cookies.CookieManager
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +16,6 @@ object ServiceCreator {
         val loggingInterceptor = HttpLoggingInterceptor("WanHttp")
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
         loggingInterceptor.setColorLevel(Level.INFO)
-//        httpClient.cookieJar(CookieManager())
         httpClient.addInterceptor(CookieInterceptor())
         httpClient.addInterceptor(loggingInterceptor)
     }

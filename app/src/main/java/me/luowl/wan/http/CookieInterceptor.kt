@@ -2,6 +2,7 @@ package me.luowl.wan.http
 
 import me.luowl.wan.AppConfig
 import me.luowl.wan.util.Preference
+import me.luowl.wan.util.logDebug
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -15,15 +16,14 @@ class CookieInterceptor : Interceptor {
         val request = chain.request()
         val builder = request.newBuilder()
 
+        val addCookie = request.header(AppConfig.ADD_WAN_ANDROID_COOKIE)?.equals("true") ?: false
+        logDebug("addCookie:$addCookie")
+
         builder.addHeader("Content-type", "application/json; charset=utf-8")
 
         val domain = request.url().host()
         val requestUrl = request.url().toString()
-        if (domain.isNotEmpty() && (requestUrl.contains(AppConfig.COLLECTIONS_WEBSITE)
-                    || requestUrl.contains(AppConfig.UNCOLLECTIONS_WEBSITE)
-                    || requestUrl.contains(AppConfig.ARTICLE_WEBSITE)
-                    || requestUrl.contains(AppConfig.TODO_WEBSITE))
-        ) {
+        if (domain.isNotEmpty() && addCookie) {
             val spDomain: String by Preference(domain, "")
             val cookie: String = if (spDomain.isNotEmpty()) spDomain else ""
             if (cookie.isNotEmpty()) {
@@ -33,11 +33,10 @@ class CookieInterceptor : Interceptor {
         }
 
         val response = chain.proceed(builder.build())
+        val saveCookie = request.header(AppConfig.SAVE_WAN_ANDROID_COOKIE)?.equals("true") ?: false
+        logDebug("saveCookie:$saveCookie")
         // set-cookie maybe has multi, login to save cookie
-        if ((requestUrl.contains(AppConfig.SAVE_USER_LOGIN_KEY)
-                    || requestUrl.contains(AppConfig.SAVE_USER_REGISTER_KEY))
-            && response.headers(AppConfig.SET_COOKIE_KEY).isNotEmpty()
-        ) {
+        if (saveCookie && response.headers(AppConfig.SET_COOKIE_KEY).isNotEmpty()) {
             val cookies = response.headers(AppConfig.SET_COOKIE_KEY)
             val cookie = AppConfig.encodeCookie(cookies)
             AppConfig.saveCookie(requestUrl, domain, cookie)
