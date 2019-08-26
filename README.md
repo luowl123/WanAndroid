@@ -7,6 +7,7 @@
 - DataBinding
 - Retrofit
 - Glide
+- Room
 
 #### 功能描述
 
