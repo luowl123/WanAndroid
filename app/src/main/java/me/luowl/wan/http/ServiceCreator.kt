@@ -1,5 +1,7 @@
 package me.luowl.wan.http
 
+import android.os.Build
+import me.luowl.wan.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +16,7 @@ object ServiceCreator {
 
     init {
         val loggingInterceptor = HttpLoggingInterceptor("WanHttp")
-        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
+        loggingInterceptor.setPrintLevel(if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
         loggingInterceptor.setColorLevel(Level.INFO)
         httpClient.addInterceptor(CookieInterceptor())
         httpClient.addInterceptor(loggingInterceptor)

@@ -9,6 +9,7 @@ import me.luowl.wan.R
 import me.luowl.wan.base.BaseFragment
 import me.luowl.wan.databinding.FragmentMineBinding
 import me.luowl.wan.event.LoginEvent
+import me.luowl.wan.ui.webview.WebViewActivity
 import me.luowl.wan.util.GlobalUtil
 
 /*
@@ -37,11 +38,23 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
         }
 
         binding.feedbackView.setOnClickListener {
-
+            context?.let {
+                WebViewActivity.startActivity(
+                    it,
+                    GlobalUtil.getString(R.string.text_feedback),
+                    AppConfig.PROJECT_ISSUES_URL
+                )
+            }
         }
 
         binding.aboutView.setOnClickListener {
-
+            context?.let {
+                WebViewActivity.startActivity(
+                    it,
+                    GlobalUtil.getString(R.string.text_feedback),
+                    AppConfig.ABOUT_APP_URL
+                )
+            }
         }
     }
 

@@ -1,92 +1,61 @@
 package me.luowl.wan.util
 
-import android.util.Log
+import android.os.Build
+import timber.log.Timber
 
 /**
  * 日志操作的扩展工具类。
  *
  */
 
-private const val VERBOSE = 1
-private const val DEBUG = 2
-private const val INFO = 3
-private const val WARN = 4
-private const val ERROR = 5
-private const val NOTHING = 6
-
-    private val level = VERBOSE
-//private val level = if (isDebug) VERBOSE else WARN
-
 fun Any.logVerbose(msg: String?) {
-    if (level <= VERBOSE) {
-        Log.v(javaClass.simpleName, msg.toString())
-    }
+    Timber.v(msg)
 }
 
 fun Any.logDebug(msg: String?) {
-    if (level <= DEBUG) {
-        Log.d(javaClass.simpleName, msg.toString())
-    }
+    Timber.v(msg)
 }
 
 fun Any.logInfo(msg: String?) {
-    if (level <= INFO) {
-        Log.i(javaClass.simpleName, msg.toString())
-    }
+    Timber.i(msg)
 }
 
 fun Any.logWarn(msg: String?, tr: Throwable? = null) {
-    if (level <= WARN) {
-        if (tr == null) {
-            Log.w(javaClass.simpleName, msg.toString())
-        } else {
-            Log.w(javaClass.simpleName, msg.toString(), tr)
-        }
-    }
+    Timber.w(msg)
 }
 
 fun Any.logError(msg: String?, tr: Throwable) {
-    if (level <= ERROR) {
-        Log.e(javaClass.simpleName, msg.toString(), tr)
-    }
+    Timber.e(tr, msg)
 }
 
 fun logVerbose(tag: String, msg: String?) {
-    if (level <= VERBOSE) {
-        Log.v(tag, msg.toString())
-    }
+    Timber.tag(tag).v(tag, msg)
 }
 
 fun logDebug(tag: String, msg: String?) {
-    if (level <= DEBUG) {
-        Log.d(tag, msg.toString())
-    }
+    Timber.tag(tag).d(msg)
 }
 
 fun logInfo(tag: String, msg: String?) {
-    if (level <= INFO) {
-        Log.i(tag, msg.toString())
-    }
+    Timber.tag(tag).i(msg)
 }
 
 fun logWarn(tag: String, msg: String?, tr: Throwable? = null) {
-    if (level <= WARN) {
-        if (tr == null) {
-            Log.w(tag, msg.toString())
-        } else {
-            Log.w(tag, msg.toString(), tr)
-        }
-    }
+    Timber.tag(tag).w(tag, msg)
 }
 
 fun logError(tag: String, msg: String?, tr: Throwable) {
-    if (level <= ERROR) {
-        Log.e(tag, msg.toString(), tr)
-    }
+    Timber.tag(tag).e(tag, msg)
 }
 
-fun printStackTrace(t:Throwable?){
-    if (level <= ERROR) {
-        t?.printStackTrace()
-    }
+fun printlnDeviceInfo(){
+    val head = "************* Log Head ****************" +
+            "\nDevice Manufacturer 制造商 : " + Build.MANUFACTURER +
+            "\nDevice Model 型号          : " + Build.MODEL +
+            "\nIdentifier_Brand  品牌     : " + Build.BRAND +
+            "\nIdentifier_Device 设备名   : " + Build.DEVICE +
+            "\nAndroid Version           : " + Build.VERSION.RELEASE +
+            "\nAndroid SDK               : " + Build.VERSION.SDK_INT +
+            "\n************* Log Head ****************\n\n"
+    logDebug("Device",head)
 }

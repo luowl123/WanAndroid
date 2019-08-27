@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +23,7 @@ import me.luowl.wan.ui.webview.WebViewActivity
 import me.luowl.wan.ui.wxarticle.ArticleListActivity
 import me.luowl.wan.util.GlobalUtil
 import me.luowl.wan.util.logDebug
-import me.luowl.wan.widget.RecyclerViewBanner
+import me.luowl.wan.widget.BannerView
 import me.luowl.wan.widget.SimpleDividerItemDecoration
 
 /**
@@ -42,8 +41,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>() {
     override fun initVariableId(): Int =BR.viewModel
 
     private lateinit var adapter: RVAdapter<ArticleData>
-    private lateinit var banner: RecyclerViewBanner
-
+    private lateinit var banner: BannerView
     override fun setupViews(savedInstanceState: Bundle?) {
         super.setupViews(savedInstanceState)
         swipe_refresh_layout.setColorSchemeColors(resources.getColor(R.color.appThemeColor))

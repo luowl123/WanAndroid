@@ -1,10 +1,12 @@
 package me.luowl.wan.ui
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -16,6 +18,7 @@ import me.luowl.wan.databinding.ActivityMainBinding
 import me.luowl.wan.ui.account.MineFragment
 import me.luowl.wan.ui.home.HomeFragment
 import me.luowl.wan.ui.project.ProjectFragment
+import me.luowl.wan.util.GlobalUtil
 
 
 class MainActivity : AppCompatActivity() {
@@ -166,6 +169,16 @@ class MainActivity : AppCompatActivity() {
                 fragment.setCurrentPage(index)
             }, 300)
         }
+    }
+
+    private var mLastBackExit: Long = 0
+    override fun onBackPressed() {
+        if (SystemClock.elapsedRealtime() - mLastBackExit > 3000) {
+            GlobalUtil.showToastShort("再按一次退出程序")
+            mLastBackExit = SystemClock.elapsedRealtime()
+            return
+        }
+        super.onBackPressed()
     }
 
     companion object {

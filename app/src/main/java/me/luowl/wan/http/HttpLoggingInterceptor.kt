@@ -15,7 +15,7 @@ import java.util.logging.Logger
 class HttpLoggingInterceptor(tag: String) : Interceptor {
 
     @Volatile
-    private var printLevel = Level.BODY
+    private var printLevel = Level.NONE
     private var colorLevel: java.util.logging.Level? = null
     private val logger: Logger = Logger.getLogger(tag)
 

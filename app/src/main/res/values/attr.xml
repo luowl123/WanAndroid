@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="RecyclerViewBanner">
+    <declare-styleable name="BannerView">
         <attr name="rvb_interval" format="integer" />
         <attr name="rvb_showIndicator" format="boolean" />
         <attr name="rvb_indicatorSelectedSrc" format="color|reference" />

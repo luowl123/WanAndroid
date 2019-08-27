@@ -6,11 +6,10 @@
                   android:layout_width="match_parent"
                   android:layout_height="@dimen/home_banner_height"
                   android:orientation="vertical">
-        <me.luowl.wan.widget.RecyclerViewBanner
+        <me.luowl.wan.widget.BannerView
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:rvb_indicatorGravity="right"
-        />
+                app:rvb_indicatorGravity="right"/>
     </LinearLayout>
 </layout>

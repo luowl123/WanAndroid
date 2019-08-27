@@ -16,19 +16,19 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.view.GravityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import me.luowl.wan.R;
-
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewBanner extends FrameLayout {
+import me.luowl.wan.R;
+
+public class BannerView extends FrameLayout {
 
     private static final int DEFAULT_SELECTED_COLOR = 0xffffffff;
     private static final int DEFAULT_UNSELECTED_COLOR = 0x50ffffff;
@@ -40,7 +40,7 @@ public class RecyclerViewBanner extends FrameLayout {
     private int mSize;
     private int mSpace;
 
-    private RecyclerView mRecyclerView;
+    private ViewPager2 mViewPager;
     private LinearLayout mLinearLayout;
     private TextView mTitleTextView;
 
@@ -49,41 +49,37 @@ public class RecyclerViewBanner extends FrameLayout {
     private OnSwitchRvBannerListener onSwitchRvBannerListener;
     OnSwitchRvBannerTitleListener onSwitchRvBannerTitleListener;
     private List<Object> mData = new ArrayList<>();
-    private int startX, startY, currentIndex;
+    private int startX, startY;
     private boolean isPlaying;
     private Handler handler = new Handler();
-    private boolean isTouched;
-    private boolean isAutoPlaying = true;
+    private boolean isAutoPlaying;
 
     private Runnable playTask = new Runnable() {
 
         @Override
         public void run() {
-            mRecyclerView.smoothScrollToPosition(++currentIndex);
-            if (isShowIndicator) {
-                switchIndicator();
-            }
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
             handler.postDelayed(this, mInterval);
         }
     };
 
-    public RecyclerViewBanner(Context context) {
+    public BannerView(Context context) {
         this(context, null);
     }
 
-    public RecyclerViewBanner(Context context, AttributeSet attrs) {
+    public BannerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RecyclerViewBanner(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecyclerViewBanner);
-        mInterval = a.getInt(R.styleable.RecyclerViewBanner_rvb_interval, 5000);
-        isShowIndicator = a.getBoolean(R.styleable.RecyclerViewBanner_rvb_showIndicator, true);
-        isAutoPlaying = a.getBoolean(R.styleable.RecyclerViewBanner_rvb_autoPlaying, true);
-        Drawable sd = a.getDrawable(R.styleable.RecyclerViewBanner_rvb_indicatorSelectedSrc);
-        Drawable usd = a.getDrawable(R.styleable.RecyclerViewBanner_rvb_indicatorUnselectedSrc);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BannerView);
+        mInterval = a.getInt(R.styleable.BannerView_rvb_interval, 5000);
+        isShowIndicator = a.getBoolean(R.styleable.BannerView_rvb_showIndicator, true);
+        isAutoPlaying = a.getBoolean(R.styleable.BannerView_rvb_autoPlaying, true);
+        Drawable sd = a.getDrawable(R.styleable.BannerView_rvb_indicatorSelectedSrc);
+        Drawable usd = a.getDrawable(R.styleable.BannerView_rvb_indicatorUnselectedSrc);
         if (sd == null) {
             mSelectedDrawable = generateDefaultDrawable(DEFAULT_SELECTED_COLOR);
         } else {
@@ -102,10 +98,10 @@ public class RecyclerViewBanner extends FrameLayout {
                 mUnselectedDrawable = usd;
             }
         }
-        mSize = a.getDimensionPixelSize(R.styleable.RecyclerViewBanner_rvb_indicatorSize, 0);
-        mSpace = a.getDimensionPixelSize(R.styleable.RecyclerViewBanner_rvb_indicatorSpace, dp2px(4));
-        int margin = a.getDimensionPixelSize(R.styleable.RecyclerViewBanner_rvb_indicatorMargin, dp2px(8));
-        int g = a.getInt(R.styleable.RecyclerViewBanner_rvb_indicatorGravity, 1);
+        mSize = a.getDimensionPixelSize(R.styleable.BannerView_rvb_indicatorSize, 0);
+        mSpace = a.getDimensionPixelSize(R.styleable.BannerView_rvb_indicatorSpace, dp2px(4));
+        int margin = a.getDimensionPixelSize(R.styleable.BannerView_rvb_indicatorMargin, dp2px(8));
+        int g = a.getInt(R.styleable.BannerView_rvb_indicatorGravity, 1);
         int gravity;
         if (g == 0) {
             gravity = GravityCompat.START;
@@ -116,29 +112,31 @@ public class RecyclerViewBanner extends FrameLayout {
         }
         a.recycle();
 
-        mRecyclerView = new RecyclerView(context);
-        new PagerSnapHelper().attachToRecyclerView(mRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        adapter = new RecyclerAdapter();
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mViewPager = new ViewPager2(context);
+        mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int next = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if (next != currentIndex) {
-                    currentIndex = next;
-                    if (isShowIndicator && isTouched) {
-                        isTouched = false;
-                        switchIndicator();
-                    }
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (isShowIndicator) {
+                    switchIndicator();
                 }
             }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
         });
+        adapter = new RecyclerAdapter();
+        mViewPager.setAdapter(adapter);
         LayoutParams vpLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        addView(mRecyclerView, vpLayoutParams);
+        addView(mViewPager, vpLayoutParams);
 
         mLinearLayout = new LinearLayout(context);
         mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -149,16 +147,16 @@ public class RecyclerViewBanner extends FrameLayout {
         linearLayoutParams.setMargins(margin, margin, margin, margin);
         addView(mLinearLayout, linearLayoutParams);
 
-        mTitleTextView=new TextView(context);
+        mTitleTextView = new TextView(context);
         mTitleTextView.setTextSize(14);
         mTitleTextView.setTextColor(getResources().getColor(R.color.white));
         mTitleTextView.setBackgroundColor(getResources().getColor(R.color.black_transparent));
-        mTitleTextView.setPadding(dp2px(10),margin,dp2px(10),margin);
+        mTitleTextView.setPadding(dp2px(10), margin, dp2px(10), margin);
         LayoutParams titleLayoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        titleLayoutParams.gravity= Gravity.BOTTOM;
+        titleLayoutParams.gravity = Gravity.BOTTOM;
 
-        addView(mTitleTextView,titleLayoutParams);
+        addView(mTitleTextView, titleLayoutParams);
 
         // 便于在xml中编辑时观察，运行时不执行
         if (isInEditMode()) {
@@ -237,20 +235,18 @@ public class RecyclerViewBanner extends FrameLayout {
         }
         if (mData.size() > 1) {
             adapter.notifyDataSetChanged();
-            currentIndex = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % mData.size();
+            int currentIndex = Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % mData.size();
             // 将起始点设为最靠近的 MAX_VALUE/2 的，且为mData.size()整数倍的位置
-            mRecyclerView.scrollToPosition(currentIndex);
+            mViewPager.setCurrentItem(currentIndex);
             if (isShowIndicator) {
                 createIndicators();
             }
             updateTitle();
             setPlaying(true);
         } else {
-            currentIndex = 0;
-            if(onSwitchRvBannerTitleListener!=null){
-                onSwitchRvBannerTitleListener.switchBanner(currentIndex,mTitleTextView);
-            }
             adapter.notifyDataSetChanged();
+            mViewPager.setCurrentItem(0);
+            updateTitle();
         }
     }
 
@@ -301,7 +297,6 @@ public class RecyclerViewBanner extends FrameLayout {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!isPlaying) {
-                    isTouched = true;
                     setPlaying(true);
                 }
                 break;
@@ -335,6 +330,12 @@ public class RecyclerViewBanner extends FrameLayout {
         super.onWindowVisibilityChanged(visibility);
     }
 
+    private void switchBanner(int position, AppCompatImageView img) {
+        if (onSwitchRvBannerListener != null) {
+            onSwitchRvBannerListener.switchBanner(position % mData.size(), img);
+        }
+    }
+
     /**
      * RecyclerView适配器
      */
@@ -353,7 +354,7 @@ public class RecyclerViewBanner extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     if (onRvBannerClickListener != null) {
-                        onRvBannerClickListener.onClick(currentIndex % mData.size());
+                        onRvBannerClickListener.onClick(mViewPager.getCurrentItem() % mData.size());
                     }
                 }
             });
@@ -363,32 +364,13 @@ public class RecyclerViewBanner extends FrameLayout {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            AppCompatImageView img = (AppCompatImageView) holder.itemView.findViewById(R.id.rvb_banner_image_view_id);
-            if (onSwitchRvBannerListener != null) {
-                onSwitchRvBannerListener.switchBanner(position % mData.size(), img);
-            }
+            AppCompatImageView img = holder.itemView.findViewById(R.id.rvb_banner_image_view_id);
+            switchBanner(position, img);
         }
 
         @Override
         public int getItemCount() {
             return mData == null ? 0 : mData.size() < 2 ? mData.size() : Integer.MAX_VALUE;
-        }
-    }
-
-    private class PagerSnapHelper extends LinearSnapHelper {
-
-        @Override
-        public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
-            int targetPos = super.findTargetSnapPosition(layoutManager, velocityX, velocityY);
-            final View currentView = findSnapView(layoutManager);
-            if (targetPos != RecyclerView.NO_POSITION && currentView != null) {
-                int currentPos = layoutManager.getPosition(currentView);
-                int first = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-                int last = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                currentPos = targetPos < currentPos ? last : (targetPos > currentPos ? first : currentPos);
-                targetPos = targetPos < currentPos ? currentPos - 1 : (targetPos > currentPos ? currentPos + 1 : currentPos);
-            }
-            return targetPos;
         }
     }
 
@@ -399,30 +381,21 @@ public class RecyclerViewBanner extends FrameLayout {
         if (mLinearLayout != null && mLinearLayout.getChildCount() > 0) {
             for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
                 ((AppCompatImageView) mLinearLayout.getChildAt(i)).setImageDrawable(
-                        i == currentIndex % mData.size() ? mSelectedDrawable : mUnselectedDrawable);
+                        i == mViewPager.getCurrentItem() % mData.size() ? mSelectedDrawable : mUnselectedDrawable);
             }
         }
         updateTitle();
     }
 
-    private void updateTitle(){
-        if(onSwitchRvBannerTitleListener!=null){
-            onSwitchRvBannerTitleListener.switchBanner(currentIndex % mData.size(),mTitleTextView);
+    private void updateTitle() {
+        if (onSwitchRvBannerTitleListener != null) {
+            onSwitchRvBannerTitleListener.switchBanner(mViewPager.getCurrentItem() % mData.size(), mTitleTextView);
         }
     }
 
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 Resources.getSystem().getDisplayMetrics());
-    }
-
-    /**
-     * 获取RecyclerView实例，便于满足自定义{@link RecyclerView.ItemAnimator}或者{@link RecyclerView.Adapter}的需求
-     *
-     * @return RecyclerView实例
-     */
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
     }
 
     public interface OnSwitchRvBannerListener {
@@ -441,7 +414,7 @@ public class RecyclerViewBanner extends FrameLayout {
         this.onRvBannerClickListener = onRvBannerClickListener;
     }
 
-    public interface OnSwitchRvBannerTitleListener{
+    public interface OnSwitchRvBannerTitleListener {
         void switchBanner(int position, TextView titleView);
     }
 
