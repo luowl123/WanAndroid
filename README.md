@@ -41,6 +41,19 @@
 
 [点击下载2](https://github.com/luowl123/WanAndroid/blob/master/app/release/app-release.apk)
 
+#### 感谢
+
+<ul>
+    <li><a target="_blank" href="https://github.com/square/retrofit">Retrofit</a></li>
+    <li><a target="_blank" href="https://github.com/bumptech/glide">Glide</a></li>
+    <li><a target="_blank" href="https://github.com/JeremyLiao/LiveEventBus">LiveEventBus</a></li>
+    <li><a target="_blank" href="https://github.com/google/flexbox-layout">Flexbox-Layout</a></li>
+    <li><a target="_blank" href="https://github.com/Tencent/VasSonic">Sonic</a></li>
+    <li><a target="_blank" href="https://bugly.qq.com/v2/index">Bugly</a></li>
+    <li>部分代码参考了<a target="_blank" href="https://github.com/goldze/MVVMHabit">MVVMHabit</a></li>
+    <li>部分代码参考了<a target="_blank" href="https://github.com/goldze/MVVMHabit">BaseRecyclerViewAdapterHelper</a></li>
+</ul>
+
 #### 项目地址
 
 >https://github.com/luowl123/WanAndroid
