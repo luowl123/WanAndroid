@@ -40,11 +40,11 @@ android {
         }
         release {
             //启用混淆配置
-            minifyEnabled true
+            minifyEnabled false
             //Zip代码压缩优化
-            zipAlignEnabled true
+//            zipAlignEnabled true
             //移除无用资源
-            shrinkResources true
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
