@@ -39,6 +39,8 @@
 
 [点击下载1](https://www.pgyer.com/app/qrcode/wanandroid4luowl)
 
+[点击下载2](https://github.com/luowl123/WanAndroid/blob/master/app/release/app-release.apk)
+
 #### 项目地址
 
 >https://github.com/luowl123/WanAndroid
