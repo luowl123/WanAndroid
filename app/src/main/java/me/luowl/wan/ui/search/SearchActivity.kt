@@ -8,6 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_search.*
+import me.luowl.wan.AppConfig
 import me.luowl.wan.BR
 import me.luowl.wan.R
 import me.luowl.wan.base.BaseActivity
@@ -67,8 +68,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                         searchView.setQuery(itemData.keyword, false)
                         setUpSearchResult()
                         viewModel.doSearch(itemData.keyword)
-                        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+                        hideSoftInput()
                     }
                     recordBinding.imgDelete.setOnClickListener {
                         viewModel.deleteRecord(itemData.keyword)
@@ -84,6 +84,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                         WebViewActivity.startActivity(this@SearchActivity, itemData.title, itemData.link)
                     }
                     articleBinding.imgCollect.setOnClickListener {
+                        if (!AppConfig.isLogin()) {
+                            showLoginDialog()
+                            return@setOnClickListener
+                        }
                         if (itemData.collect) {
                             viewModel.cancelCollectArticle(itemData.id)
                         } else {
@@ -122,6 +126,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                 LoadMoreState.STATE_LOAD_NONE -> resultAdapter.loadMoreComplete()
             }
         })
+        initLoginChangeObservable()
     }
 
     override fun startLoadData() {
@@ -160,6 +165,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 setUpSearchResult()
                 viewModel.doSearch(query)
+                hideSoftInput()
                 return true
             }
 
@@ -175,5 +181,10 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
         })
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun hideSoftInput(){
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
     }
 }

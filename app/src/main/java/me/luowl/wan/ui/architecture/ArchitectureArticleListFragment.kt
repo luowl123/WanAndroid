@@ -5,6 +5,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_project_list.*
+import me.luowl.wan.AppConfig
 import me.luowl.wan.BR
 import me.luowl.wan.R
 import me.luowl.wan.base.BaseFragment
@@ -58,6 +59,10 @@ class ArchitectureArticleListFragment :
                         }
                     }
                     itemBinding.imgCollect.setOnClickListener {
+                        if(!AppConfig.isLogin()){
+                            showLoginDialog()
+                            return@setOnClickListener
+                        }
                         if (itemData.collect) {
                             viewModel.cancelCollectArticle(itemData.id)
                         } else {

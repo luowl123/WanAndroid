@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.TextUtils
 import android.view.View
 import android.webkit.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.tencent.sonic.sdk.SonicConfig
 import com.tencent.sonic.sdk.SonicEngine
 import com.tencent.sonic.sdk.SonicSession
@@ -21,6 +26,8 @@ import me.luowl.wan.R
 import me.luowl.wan.base.BaseActivity
 import me.luowl.wan.base.BaseViewModel
 import me.luowl.wan.databinding.ActivityWebViewBinding
+import me.luowl.wan.util.GlobalUtil
+
 
 /*
  *
@@ -49,6 +56,9 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
     override fun setupViews(savedInstanceState: Bundle?) {
         super.setupViews(savedInstanceState)
         setupToolbar()
+        toolbar?.setNavigationOnClickListener {
+            finish()
+        }
         title = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(intent.getStringExtra(TITLE), Html.FROM_HTML_MODE_LEGACY)
         } else {
@@ -152,6 +162,19 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
                 }
                 return null
             }
+
+//            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+//                if (interceptUrl(url)) return true
+//                return super.shouldOverrideUrlLoading(view, url)
+//            }
+//
+//            override fun shouldOverrideUrlLoading(
+//                view: WebView,
+//                request: WebResourceRequest
+//            ): Boolean {
+//                if (interceptUrl(view.url)) return true
+//                return super.shouldOverrideUrlLoading(view, request)
+//            }
         }
 
         webView.webChromeClient = object : WebChromeClient() {
@@ -199,6 +222,61 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
         } else { // default mode
             webView.loadUrl(url)
         }
+    }
+
+    private fun interceptUrl(url: String?): Boolean {
+        if (TextUtils.isEmpty(url)) {
+            return true
+        }
+        val notNullUrl = url!!
+        if (!notNullUrl.startsWith("http") && !notNullUrl.startsWith("https")) {
+            openOtherApp(notNullUrl)
+            return true
+        }
+        return false
+    }
+
+    private fun openOtherApp(uri: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            val resolveInfo: ResolveInfo? =
+                packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            resolveInfo?.let {
+                val targetAppPackageName = it.activityInfo.packageName
+                val dialog = AlertDialog.Builder(this)
+                    .setTitle("是否允许打开${getApplicationNameByPackageName(targetAppPackageName)}")
+                    .setPositiveButton(
+                        "确定"
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                        startActivity(intent)
+                    }
+                    .setNegativeButton(GlobalUtil.getString(R.string.text_cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                dialog.show()
+            }
+        } catch (e: Exception) {
+            // 防止没有安装的情况
+            e.printStackTrace()
+        }
+    }
+
+    private fun getApplicationNameByPackageName(packageName: String): String {
+        val pm = packageManager
+        val targetAppName: String
+        targetAppName = try {
+            pm.getApplicationLabel(
+                pm.getApplicationInfo(
+                    packageName,
+                    PackageManager.GET_META_DATA
+                )
+            ).toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            ""
+        }
+        return targetAppName
     }
 
     override fun onBackPressed() {

@@ -102,6 +102,10 @@ open class BaseViewModel : ViewModel() {
         uc.dismissDialogEvent.call()
     }
 
+    fun showLoginDialog(){
+        uc.showLoginDialogEvent.call()
+    }
+
     /**
      * 跳转页面
      *
@@ -155,6 +159,9 @@ open class BaseViewModel : ViewModel() {
             SingleLiveEvent<Void>()
         }
         val onBackPressedEvent: SingleLiveEvent<Void>by lazy {
+            SingleLiveEvent<Void>()
+        }
+        val showLoginDialogEvent: SingleLiveEvent<Void>by lazy {
             SingleLiveEvent<Void>()
         }
     }

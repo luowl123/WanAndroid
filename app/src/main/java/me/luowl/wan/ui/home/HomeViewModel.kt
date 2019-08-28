@@ -46,19 +46,27 @@ class HomeViewModel constructor(private val repository: WanRepository) : BaseVie
             }
             val resp = repository.getHomeArticleList(pageIndex)
             if (pageIndex == 0) {
+                _items.value?.clear()
                 bannerData.value = bannerItems
             }
             when (resp.errorCode) {
                 0 -> {
                     val pageData = resp.data ?: throw Throwable("page data is null")
-                    pageData.datas?.let {
-                        tempItems.addAll(it)
-                        if (_items.value == null) {
-                            _items.value = tempItems
-                        } else {
-                            _items.value?.addAll(tempItems)
-                        }
+                    val pageItems = java.util.ArrayList(pageData.datas ?: listOf())
+                    if (pageIndex == 0 || _items.value == null) {
+                        tempItems.addAll(pageItems)
+                        _items.value = tempItems
+                    } else {
+                        _items.value?.addAll(pageItems)
                     }
+//                    pageData.datas?.let {
+//                        tempItems.addAll(it)
+//                        if (_items.value == null) {
+//                            _items.value = tempItems
+//                        } else {
+//                            _items.value?.addAll(tempItems)
+//                        }
+//                    }
                     if (pageIndex == 0 && bannerItems.size == 0) {
                         loadDataEmpty()
                     } else {
@@ -94,9 +102,9 @@ class HomeViewModel constructor(private val repository: WanRepository) : BaseVie
         launch({
             val resp = repository.addCollect(id)
             checkResponseCode(resp)
-            GlobalUtil.showToastShort("收藏成功")
+//            GlobalUtil.showToastShort("收藏成功")
         }, {
-            GlobalUtil.showToastShort("收藏失败")
+//            GlobalUtil.showToastShort("收藏失败")
         })
     }
 
@@ -104,9 +112,9 @@ class HomeViewModel constructor(private val repository: WanRepository) : BaseVie
         launch({
             val resp = repository.cancelCollectArticleByOriginId(id)
             checkResponseCode(resp)
-            GlobalUtil.showToastShort("取消收藏")
+//            GlobalUtil.showToastShort("取消收藏")
         }, {
-            GlobalUtil.showToastShort("操作失败")
+//            GlobalUtil.showToastShort("操作失败")
         })
     }
 

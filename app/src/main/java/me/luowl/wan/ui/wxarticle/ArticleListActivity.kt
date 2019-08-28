@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_wx_article_list.*
+import me.luowl.wan.AppConfig
 import me.luowl.wan.BR
 import me.luowl.wan.R
 import me.luowl.wan.base.BaseActivity
@@ -54,6 +56,10 @@ class ArticleListActivity : BaseActivity<ActivityWxArticleListBinding, ArticleLi
                     WebViewActivity.startActivity(this@ArticleListActivity, itemData.title, itemData.link)
                 }
                 itemBinding.imgCollect.setOnClickListener {
+                    if (!AppConfig.isLogin()) {
+                        showLoginDialog()
+                        return@setOnClickListener
+                    }
                     if (itemData.collect) {
                         viewModel.cancelCollectArticle(itemData.id)
                     } else {
@@ -85,6 +91,7 @@ class ArticleListActivity : BaseActivity<ActivityWxArticleListBinding, ArticleLi
                 LoadMoreState.STATE_LOAD_NONE -> adapter.loadMoreComplete()
             }
         })
+        initLoginChangeObservable()
     }
 
     override fun startLoadData() {
@@ -96,12 +103,13 @@ class ArticleListActivity : BaseActivity<ActivityWxArticleListBinding, ArticleLi
         }
     }
 
+    private lateinit var searchView: SearchView
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_search_view, menu)
 
         //找到searchView
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
 //        searchView.onActionViewExpanded()// 当展开无输入内容的时候，没有关闭的图标
 //        searchView.queryHint = "搜索关键字以空格形式隔开"//设置默认无内容时的文字提示
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -109,6 +117,7 @@ class ArticleListActivity : BaseActivity<ActivityWxArticleListBinding, ArticleLi
                 viewModel.keyword = query
                 viewModel.reset()
                 viewModel.getData()
+                hideSoftInput()
                 return true
             }
 
@@ -134,5 +143,9 @@ class ArticleListActivity : BaseActivity<ActivityWxArticleListBinding, ArticleLi
         }
     }
 
+    private fun hideSoftInput(){
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(searchView.windowToken, 0)
+    }
 
 }

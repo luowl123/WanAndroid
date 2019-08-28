@@ -89,4 +89,8 @@ object AppConfig {
         Preference.clearPreference()
     }
 
+    fun isLogin(): Boolean {
+        return user.isNotEmpty()
+    }
+
 }

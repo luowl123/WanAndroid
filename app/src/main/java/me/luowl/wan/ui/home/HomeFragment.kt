@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_home.*
+import me.luowl.wan.AppConfig
 import me.luowl.wan.BR
 import me.luowl.wan.R
 import me.luowl.wan.base.BaseFragment
@@ -60,6 +61,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding,HomeViewModel>() {
                     }
                 }
                 articleBinding.imgCollect.setOnClickListener {
+                    if(!AppConfig.isLogin()){
+                        showLoginDialog()
+                        return@setOnClickListener
+                    }
                     if (itemData.collect) {
                         viewModel.cancelCollectArticle(itemData.id)
                     } else {

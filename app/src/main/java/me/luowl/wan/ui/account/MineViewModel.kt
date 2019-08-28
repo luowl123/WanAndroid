@@ -18,8 +18,7 @@ class MineViewModel constructor(private val repository: WanRepository) : BaseVie
 
 
     fun isLogin(): Boolean {
-        logDebug("user:${AppConfig.user}")
-        return AppConfig.user.isNotEmpty()
+        return AppConfig.isLogin()
     }
 
     fun logout() {

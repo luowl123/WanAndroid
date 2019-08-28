@@ -3,6 +3,7 @@ package me.luowl.wan.base
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
@@ -10,7 +11,12 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.jeremyliao.liveeventbus.LiveEventBus
+import me.luowl.wan.AppConfig
 import me.luowl.wan.R
+import me.luowl.wan.event.LoginEvent
+import me.luowl.wan.ui.account.LoginActivity
+import me.luowl.wan.util.GlobalUtil
 import me.luowl.wan.util.ViewModelFactory
 
 /*
@@ -87,6 +93,7 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
             val bundle = it[BaseViewModel.BUNDLE] as Bundle
             startActivity(clz, bundle)
         })
+        viewModel.uc.showLoginDialogEvent.observe(this, Observer { showLoginDialog() })
     }
 
 //    var dialog:Dialog?
@@ -145,6 +152,13 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
 
     }
 
+    open fun initLoginChangeObservable(){
+        LiveEventBus.get().with(AppConfig.LOGIN_KEY, LoginEvent::class.java)
+            .observe(this, Observer {
+                viewModel.retry()
+            })
+    }
+
     open fun startLoadData() {
 
     }
@@ -169,6 +183,19 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
         }
         val actionBar = supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    protected fun showLoginDialog() {
+        val dialog = AlertDialog.Builder(this).setTitle(GlobalUtil.getString(R.string.login_tip_title)).setPositiveButton(
+            GlobalUtil.getString(R.string.text_login)
+        ) { dialog, _ ->
+            dialog.dismiss()
+            val intent = Intent(this@BaseActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }.setNegativeButton(GlobalUtil.getString(R.string.text_cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
 

@@ -5,11 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.jeremyliao.liveeventbus.LiveEventBus
+import me.luowl.wan.AppConfig
+import me.luowl.wan.R
+import me.luowl.wan.event.LoginEvent
+import me.luowl.wan.ui.account.LoginActivity
 import me.luowl.wan.util.GlobalUtil
 import me.luowl.wan.util.ViewModelFactory
 
@@ -55,6 +61,7 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
         registerUIChangeLiveDataCallBack()
         //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
         initViewObservable()
+        initLoginChangeObservable()
         startLoadData()
     }
 
@@ -149,11 +156,33 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
 
     }
 
+    open fun initLoginChangeObservable(){
+        LiveEventBus.get().with(AppConfig.LOGIN_KEY, LoginEvent::class.java)
+            .observe(this, Observer {
+                viewModel.retry()
+            })
+    }
+
     open fun startLoadData() {
 
     }
 
     fun isBackPressed(): Boolean {
         return false
+    }
+
+    protected fun showLoginDialog() {
+        context?.let {
+            val dialog = AlertDialog.Builder(it).setTitle(GlobalUtil.getString(R.string.login_tip_title)).setPositiveButton(
+                GlobalUtil.getString(R.string.text_login)
+            ) { dialog, _ ->
+                dialog.dismiss()
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
+            }.setNegativeButton(GlobalUtil.getString(R.string.text_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
     }
 }

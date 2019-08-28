@@ -1,6 +1,7 @@
 package me.luowl.wan.ui.account
 
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.jeremyliao.liveeventbus.LiveEventBus
 import me.luowl.wan.AppConfig
@@ -33,7 +34,7 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
             if (viewModel.isLogin()) {
                 context?.let { ctx -> CollectionActivity.startActivity(ctx) }
             } else {
-                GlobalUtil.showToastShort("请先登录")
+                showLoginDialog()
             }
         }
 
@@ -56,6 +57,10 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
                 )
             }
         }
+
+        binding.logoutBtn.setOnClickListener {
+            showConfirmLogoutDialog()
+        }
     }
 
     private fun updateInfo() {
@@ -73,13 +78,26 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
         }
     }
 
-    override fun initViewObservable() {
-        super.initViewObservable()
+    override fun initLoginChangeObservable() {
         LiveEventBus.get().with(AppConfig.LOGIN_KEY, LoginEvent::class.java)
             .observe(this, Observer {
                 updateInfo()
                 refreshLayout()
             })
+    }
+
+    private fun showConfirmLogoutDialog() {
+        context?.let {
+            val dialog = AlertDialog.Builder(it).setTitle(GlobalUtil.getString(R.string.logout_tip)).setPositiveButton(
+                GlobalUtil.getString(R.string.logout_yes)
+            ) { dialog, _ ->
+                dialog.dismiss()
+                viewModel.logout()
+            }.setNegativeButton(GlobalUtil.getString(R.string.logout_no)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
     }
 
 }

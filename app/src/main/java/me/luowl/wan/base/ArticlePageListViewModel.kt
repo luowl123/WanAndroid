@@ -68,9 +68,9 @@ abstract class ArticlePageListViewModel constructor(val repository: WanRepositor
         launch({
             val resp = repository.addCollect(id)
             checkResponseCode(resp)
-            GlobalUtil.showToastShort("收藏成功")
+//            GlobalUtil.showToastShort("收藏成功")
         }, {
-            GlobalUtil.showToastShort("收藏失败")
+//            GlobalUtil.showToastShort("收藏失败")
         })
     }
 
@@ -78,9 +78,9 @@ abstract class ArticlePageListViewModel constructor(val repository: WanRepositor
         launch({
             val resp = repository.cancelCollectArticleByOriginId(id)
             checkResponseCode(resp)
-            GlobalUtil.showToastShort("取消收藏")
+//            GlobalUtil.showToastShort("取消收藏")
         }, {
-            GlobalUtil.showToastShort("操作失败")
+//            GlobalUtil.showToastShort("操作失败")
         })
     }
 
@@ -88,10 +88,10 @@ abstract class ArticlePageListViewModel constructor(val repository: WanRepositor
         launch({
             val resp = repository.cancelCollectArticle(id, originId)
             checkResponseCode(resp)
-            GlobalUtil.showToastShort("取消收藏")
+//            GlobalUtil.showToastShort("取消收藏")
             retry()
         }, {
-            GlobalUtil.showToastShort("操作失败")
+//            GlobalUtil.showToastShort("操作失败")
         })
     }
 }
