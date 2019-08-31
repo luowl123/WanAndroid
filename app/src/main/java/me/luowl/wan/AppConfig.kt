@@ -24,7 +24,7 @@ object AppConfig {
 
     const val PROJECT_ISSUES_URL="https://github.com/luowl123/WanAndroid/issues"
     const val ABOUT_APP_URL="file:///android_asset/about_app.html"
-    const val BUGLY_APP_ID="5448210acd"//自己申请
+    const val BUGLY_APP_ID=""//自己申请
 
     fun encodeCookie(cookies: List<String>): String {
         val sb = StringBuilder()
