@@ -25,7 +25,7 @@ class RegisterViewModel constructor(private val repository: WanRepository) : Bas
 
 
     fun register() {
-        logDebug("username=${username.value} password=${password.value}")
+//        logDebug("username=${username.value} password=${password.value}")
         val usernameValue = username.value
         val pwdValue = password.value
         val rePwdValue = repassword.value

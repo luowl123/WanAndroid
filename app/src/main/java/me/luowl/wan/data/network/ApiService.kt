@@ -181,4 +181,12 @@ interface ApiService {
         @Path("id") id: Long,
         @Field("originId") originId: Long = -1
     ): Call<BaseResp<Any>>
+
+    @Headers(AppConfig.HEADER_AND_WAN_ANDROID_COOKIE)
+    @GET("lg/coin/getcount/json")
+    fun getMyCoinCount(): Call<BaseResp<Long>>
+
+    @Headers(AppConfig.HEADER_AND_WAN_ANDROID_COOKIE)
+    @GET("lg/coin/list/{pageIndex}/json")
+    fun getCoinList(@Path("pageIndex") pageIndex: Int): Call<BaseResp<CoinPage>>
 }

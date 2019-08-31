@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="viewModel" type="me.luowl.wan.ui.account.LoginViewModel"/>
-        <import type="me.luowl.wan.base.BaseViewModel"/>
+        <variable
+                name="viewModel"
+                type="me.luowl.wan.ui.account.LoginViewModel" />
+        <import type="me.luowl.wan.base.BaseViewModel" />
     </data>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:background="#eee"
-                  android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#eee"
+            android:orientation="vertical">
+
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -16,40 +20,43 @@
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="@string/text_login"/>
+                app:title="@string/text_login" />
 
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="@dimen/login_input_height"
-                  android:layout_marginLeft="@dimen/app_page_padding"
-                  android:layout_marginTop="40dp"
-                  android:layout_marginRight="@dimen/app_page_padding"
-                  android:background="@drawable/shape_login_edit_bg"
-                  android:hint="@string/input_username"
-                  android:maxLength="50"
-                  android:maxLines="1"
-                  android:paddingLeft="@dimen/dp_10"
-                  android:text="@={viewModel.username}"
-                  android:textSize="@dimen/text_size_14"
-        />
-        <View android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:background="@color/app_divider"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_input_height"
+                android:layout_marginLeft="@dimen/app_page_padding"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="@dimen/app_page_padding"
+                android:background="@drawable/shape_login_edit_bg"
+                android:hint="@string/input_username"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/dp_10"
+                android:text="@={viewModel.username}"
+                android:textSize="@dimen/text_size_14" />
 
-        <EditText android:layout_width="match_parent"
-                  android:layout_height="@dimen/login_input_height"
-                  android:layout_marginLeft="@dimen/app_page_padding"
-                  android:layout_marginRight="@dimen/app_page_padding"
-                  android:background="@drawable/shape_login_edit_bg"
-                  android:hint="@string/input_password"
-                  android:inputType="textPassword"
-                  android:maxLength="50"
-                  android:maxLines="1"
-                  android:paddingLeft="@dimen/dp_10"
-                  android:text="@={viewModel.password}"
-                  android:textSize="@dimen/text_size_14"
-        />
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/app_divider" />
 
-        <Button android:layout_width="match_parent"
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/login_input_height"
+                android:layout_marginLeft="@dimen/app_page_padding"
+                android:layout_marginRight="@dimen/app_page_padding"
+                android:background="@drawable/shape_login_edit_bg"
+                android:hint="@string/input_password"
+                android:inputType="textPassword"
+                android:maxLength="50"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/dp_10"
+                android:text="@={viewModel.password}"
+                android:textSize="@dimen/text_size_14" />
+
+        <Button
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="@dimen/app_page_padding"
                 android:layout_marginTop="20dp"
@@ -59,7 +66,7 @@
                 android:onClick="@{()->viewModel.login()}"
                 android:text="@string/text_login"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_16"/>
+                android:textSize="@dimen/text_size_16" />
 
         <TextView
                 android:id="@+id/register_btn"
@@ -70,7 +77,7 @@
                 android:layout_marginRight="@dimen/dp_20"
                 android:text="@string/text_register_account"
                 android:textColor="@color/appThemeColor"
-                android:textSize="@dimen/text_size_14"/>
+                android:textSize="@dimen/text_size_14" />
 
     </LinearLayout>
 </layout>

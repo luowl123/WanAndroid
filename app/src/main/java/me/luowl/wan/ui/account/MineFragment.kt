@@ -52,9 +52,17 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
             context?.let {
                 WebViewActivity.startActivity(
                     it,
-                    GlobalUtil.getString(R.string.text_feedback),
+                    GlobalUtil.getString(R.string.text_about),
                     AppConfig.ABOUT_APP_URL
                 )
+            }
+        }
+
+        binding.coinView.setOnClickListener {
+            if (viewModel.isLogin()) {
+                context?.let { ctx -> CoinListActivity.startActivity(ctx) }
+            } else {
+                showLoginDialog()
             }
         }
 
@@ -68,6 +76,7 @@ class MineFragment : BaseFragment<FragmentMineBinding, MineViewModel>() {
             binding.usernameTv.text = AppConfig.user
             binding.userImg.setOnClickListener {
             }
+            viewModel.getMyCoin()
         } else {
             binding.usernameTv.text = "未登录"
             binding.userImg.setOnClickListener {

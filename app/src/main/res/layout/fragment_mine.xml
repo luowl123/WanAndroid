@@ -8,6 +8,7 @@
                 type="me.luowl.wan.ui.account.MineViewModel" />
 
         <import type="android.view.View" />
+        <import type="android.text.Html"/>
     </data>
 
     <androidx.core.widget.NestedScrollView
@@ -49,11 +50,43 @@
                         android:text="@string/not_login"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_14" />
+
             </RelativeLayout>
 
             <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_10" />
+
+            <LinearLayout
+                    android:id="@+id/coin_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/selector_list_item_bg"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/app_page_padding"
+                    android:visibility="@{viewModel.showMyCoin?View.VISIBLE:View.GONE}"
+                    android:paddingRight="@dimen/app_page_padding">
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@mipmap/ic_coin" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/app_page_padding"
+                        android:text="@{Html.fromHtml(viewModel.myCoinCount)}"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_14" />
+            </LinearLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:visibility="@{viewModel.showMyCoin?View.VISIBLE:View.GONE}"
+                    android:layout_height="1dp" />
 
             <LinearLayout
                     android:id="@+id/collection_view"

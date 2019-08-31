@@ -65,6 +65,9 @@ class WanNetwork {
 
     suspend fun cancelCollectArticle(articleId:Long,originId: Long=-1)=apiService.cancelCollectArticle(articleId,originId).await()
 
+    suspend fun getMyCoinCount() = apiService.getMyCoinCount().await()
+
+    suspend fun getCoinList(pageIndex: Int) = apiService.getCoinList(pageIndex).await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

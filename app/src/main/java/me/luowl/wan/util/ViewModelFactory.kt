@@ -10,10 +10,7 @@ import me.luowl.wan.data.local.WanDatabase
 import me.luowl.wan.data.network.WanNetwork
 import me.luowl.wan.ui.FindViewModel
 import me.luowl.wan.ui.MainViewModel
-import me.luowl.wan.ui.account.CollectionViewModel
-import me.luowl.wan.ui.account.LoginViewModel
-import me.luowl.wan.ui.account.MineViewModel
-import me.luowl.wan.ui.account.RegisterViewModel
+import me.luowl.wan.ui.account.*
 import me.luowl.wan.ui.architecture.ArchitectureArticleListViewModel
 import me.luowl.wan.ui.architecture.ArchitectureCategoryViewModel
 import me.luowl.wan.ui.architecture.ArchitectureViewModel
@@ -71,6 +68,8 @@ class ViewModelFactory private constructor(
                     RegisterViewModel(repository)
                 isAssignableFrom(CollectionViewModel::class.java) ->
                     CollectionViewModel(repository)
+                isAssignableFrom(CoinViewModel::class.java) ->
+                    CoinViewModel(repository)
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

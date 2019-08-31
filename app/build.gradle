@@ -1,10 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
+apply plugin: 'AndResGuard'
 
 android {
     compileSdkVersion 28
@@ -12,8 +10,8 @@ android {
         applicationId "me.luowl.wan"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -23,6 +21,8 @@ android {
                         "room.incremental"   : "true"]
             }
         }
+
+        resConfigs "zh"
     }
 
     signingConfigs{
@@ -31,6 +31,7 @@ android {
             keyPassword '@myapp0701#!'
             storeFile file('../myapp.jks')
             storePassword '@myapp0701#'
+            v2SigningEnabled true
         }
     }
 
@@ -39,13 +40,28 @@ android {
             signingConfig signingConfigs.release
         }
         release {
+            signingConfig signingConfigs.release
             //启用混淆配置
-            minifyEnabled false
+            minifyEnabled true
             //Zip代码压缩优化
-//            zipAlignEnabled true
+            zipAlignEnabled true
             //移除无用资源
-//            shrinkResources true
+            shrinkResources true
+            pseudoLocalesEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        releaseLog {
+            buildConfigField "boolean", "DEBUG_MODE", "false"
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            debuggable true
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+
+            matchingFallbacks = ['release']
         }
     }
 
@@ -53,6 +69,101 @@ android {
         enabled true
     }
 
+    andResGuard {
+        // mappingFile = file("./resource_mapping.txt")
+        mappingFile = null
+        use7zip = true
+        useSign = true
+        // 打开这个开关，会keep住所有资源的原始路径，只混淆资源的名字
+        keepRoot = false
+        // 设置这个值，会把arsc name列混淆成相同的名字，减少string常量池的大小
+        fixedResName = "arg"
+        // 打开这个开关会合并所有哈希值相同的资源，但请不要过度依赖这个功能去除去冗余资源
+        mergeDuplicatedRes = true
+        whiteList = [
+                // for your icon
+                "R.drawable.icon",
+                // for fabric
+//                "R.string.com.crashlytics.*",
+                // for google-services
+                "R.string.google_app_id",
+                "R.string.gcm_defaultSenderId",
+                "R.string.default_web_client_id",
+                "R.string.ga_trackingId",
+                "R.string.firebase_database_url",
+                "R.string.google_api_key",
+                "R.string.google_crash_reporting_api_key"
+        ]
+        compressFilePattern = [
+                "*.png",
+                "*.jpg",
+                "*.jpeg",
+                "*.gif",
+        ]
+        sevenzip {
+            artifact = 'com.tencent.mm:SevenZip:1.2.17'
+            //path = "/usr/local/bin/7za"
+        }
+
+        /**
+         * 可选： 如果不设置则会默认覆盖assemble输出的apk
+         **/
+        // finalApkBackupPath = "${project.rootDir}/final.apk"
+
+        /**
+         * 可选: 指定v1签名时生成jar文件的摘要算法
+         * 默认值为“SHA-1”
+         **/
+        // digestalg = "SHA-256"
+    }
+
+}
+
+task createVersionInformation {
+    def resDir = new File(buildDir, 'generated/buildinfo/')
+    def destDir = new File(resDir, 'META-INF/')
+
+    android {
+        sourceSets {
+            main.resources {
+                srcDir resDir
+            }
+        }
+    }
+
+    doLast {
+        destDir.mkdirs()
+        def vfile = new File(destDir, 'BUILD_INFO')
+
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'log', '-1', '--format=%H'
+            standardOutput = stdout
+        }
+        def git_hash = stdout.toString().trim()
+
+        stdout.reset()
+        exec {
+            commandLine 'git', 'config', 'remote.origin.url'
+            standardOutput = stdout
+        }
+        def remote = stdout.toString().trim()
+
+        def dirty = exec {
+            commandLine 'git', 'diff-index', '--quiet', 'HEAD'
+            ignoreExitValue true
+        }
+        dirty = dirty.getExitValue() == 0 ? ' (Clean workspace)' : '-DIRTY using dirty workspace!'
+
+        def repo_info = "$remote at $git_hash$dirty"
+
+        vfile.text = "$repo_info\n"
+    }
+}
+
+project.afterEvaluate {
+    tasks.findAll { task -> task.name.startsWith('merge') && task.name.endsWith('Resources')
+    }.each { t -> t.dependsOn createVersionInformation }
 }
 
 dependencies {

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
                 name="viewModel"
-                type="me.luowl.wan.ui.account.CollectionViewModel" />
+                type="me.luowl.wan.ui.account.CoinViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +20,7 @@
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="@string/my_collection" />
+                app:title="@string/my_coin_count" />
 
         <FrameLayout
                 android:layout_width="match_parent"

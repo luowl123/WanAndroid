@@ -102,6 +102,14 @@ class WanRepository private constructor(private val network: WanNetwork) {
         network.cancelCollectArticle(articleId,originId)
     }
 
+    suspend fun getMyCoinCount()= withContext(Dispatchers.IO){
+        network.getMyCoinCount()
+    }
+
+    suspend fun getCoinList(pageIndex: Int) = withContext(Dispatchers.IO) {
+        network.getCoinList(pageIndex)
+    }
+
     companion object {
         private var instance: WanRepository? = null
 

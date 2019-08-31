@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+                name="data"
+                type="me.luowl.wan.data.model.CoinData" />
+    </data>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/app_page_padding"
+            android:paddingTop="@dimen/dp_15"
+            android:paddingRight="@dimen/app_page_padding"
+            android:paddingBottom="@dimen/dp_15"
+            android:text="@{data.desc}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_14" />
+</layout>
