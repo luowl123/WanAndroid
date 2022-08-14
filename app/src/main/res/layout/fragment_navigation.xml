@@ -25,11 +25,11 @@
                 app:layout_constraintLeft_toRightOf="@+id/recycler_view"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-        <include layout="@layout/page_state_view"
-                 app:layout_constraintBottom_toBottomOf="parent"
-                 app:layout_constraintLeft_toLeftOf="parent"
-                 app:layout_constraintRight_toRightOf="parent"
-                 app:layout_constraintTop_toTopOf="parent"
-                 app:viewModel="@{viewModel}"/>
+        <ViewStub
+                android:id="@+id/page_state_view_stub"
+                android:layout="@layout/page_state_view"
+                app:viewModel="@{viewModel}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

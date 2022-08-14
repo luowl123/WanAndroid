@@ -2,6 +2,7 @@ package me.luowl.wan.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /*
@@ -11,7 +12,23 @@ import androidx.room.PrimaryKey
  * Desc：
  */
 @Entity(tableName = "search_records")
-data class SearchRecord @JvmOverloads constructor(
-    @ColumnInfo(name = "keyword") var keyword: String = "",
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "record_id") var id:Long=0L
-)
+class SearchRecord {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "record_id")
+    var id: Long = 0L
+
+    @ColumnInfo(name = "keyword")
+    var keyword: String = ""
+
+    @Ignore
+    constructor()
+
+    constructor(
+        keyword: String = "",
+        id: Long = 0L
+    ) {
+        this.id = id
+        this.keyword = keyword
+    }
+}

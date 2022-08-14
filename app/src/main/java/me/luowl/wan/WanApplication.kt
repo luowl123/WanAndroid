@@ -6,6 +6,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.multidex.MultiDex
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.tencent.bugly.Bugly
 import com.tencent.sonic.sdk.SonicConfig
@@ -23,6 +24,12 @@ import timber.log.Timber
  * Desc：
  */
 class WanApplication : Application() {
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
         context = this
@@ -81,7 +88,7 @@ class WanApplication : Application() {
                 AppManager.finishActivity(activity)
             }
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
                 logDebug(TAG, "${activity.javaClass.simpleName} onActivitySaveInstanceState")
             }
 

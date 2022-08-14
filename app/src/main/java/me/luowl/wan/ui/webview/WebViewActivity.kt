@@ -36,16 +36,16 @@ import me.luowl.wan.util.GlobalUtil
  * Desc：
  */
 
-class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
+class WebViewActivity : BaseActivity<ActivityWebViewBinding, WebViewModel>() {
 
-    override fun getViewModelClass(): Class<BaseViewModel> = BaseViewModel::class.java
+    override fun getViewModelClass(): Class<WebViewModel> = WebViewModel::class.java
 
     override fun getLayoutId() = R.layout.activity_web_view
 
     override fun initVariableId() = BR.viewModel
 
     private var sonicSession: SonicSession? = null
-    private lateinit var url: String
+    private var url: String?=""
 
     override fun initParams() {
         super.initParams()
@@ -122,7 +122,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
         //            }
 
         // create sonic session and run sonic flow
-        sonicSession = SonicEngine.getInstance().createSession(url, sessionConfigBuilder.build())
+        sonicSession = SonicEngine.getInstance().createSession(url!!, sessionConfigBuilder.build())
         if (null != sonicSession) {
             sonicSessionClient = SonicSessionClientImpl()
             sonicSession!!.bindClient(sonicSessionClient)
@@ -220,7 +220,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding, BaseViewModel>() {
             sonicSessionClient.bindWebView(webView)
             sonicSessionClient.clientReady()
         } else { // default mode
-            webView.loadUrl(url)
+            webView.loadUrl(url!!)
         }
     }
 

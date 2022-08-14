@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <variable name="viewModel" type="me.luowl.wan.base.BaseViewModel"/>
+        <variable name="viewModel" type="me.luowl.wan.ui.webview.WebViewModel"/>
     </data>
 
     <LinearLayout

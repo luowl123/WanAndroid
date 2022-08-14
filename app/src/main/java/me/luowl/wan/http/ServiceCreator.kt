@@ -1,6 +1,5 @@
 package me.luowl.wan.http
 
-import android.os.Build
 import me.luowl.wan.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

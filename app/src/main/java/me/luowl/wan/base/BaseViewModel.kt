@@ -1,7 +1,7 @@
 package me.luowl.wan.base
 
 import android.os.Bundle
-import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -19,24 +19,25 @@ import me.luowl.wan.http.ApiException
 open class BaseViewModel : ViewModel() {
 
     val stateModel = StateModel()
-    val refreshing: ObservableBoolean = ObservableBoolean(false)
+    val refreshing = MutableLiveData<Boolean>().apply { value = false }
 
     val uc by lazy {
         UIChangeLiveData()
     }
 
     open fun startRefresh() {
-        refreshing.set(true)
+        refreshing.value=true
         retry()
     }
 
     open fun stopRefresh() {
-        refreshing.set(false)
+        refreshing.value=false
     }
 
     open fun startLoading() {
-        if (!refreshing.get())
+        if (!refreshing.value!!) {
             stateModel.startLoading()
+        }
     }
 
     open fun loadDataFinish() {

@@ -308,7 +308,17 @@ open class RVAdapter<T>(private var itemDatas: MutableList<T>, private val defau
                         LayoutInflater.from(parent.context), R.layout.recycler_item_load_more,
                         parent, false
                     )
-                return RVViewHolder(banding)
+                return RVViewHolder(banding).apply {
+                    binding.root.findViewById<View>(R.id.load_more_load_fail_view)?.setOnClickListener {
+                        loadMoreStateModel.startLoading()
+                        if (!mLoading) {
+                            mLoading = true
+                            recyclerView?.let { it.post { loadMoreListener?.loadMore() } }
+                                ?: loadMoreListener?.loadMore()
+                        }
+                        notifyItemChanged(getLoadMoreViewPosition())
+                    }
+                }
             }
             TYPE_HEADER_VIEW -> {
 //                val banding: ViewDataBinding = DataBindingUtil.bind(mHeaderLayout!!)!!
@@ -325,15 +335,15 @@ open class RVAdapter<T>(private var itemDatas: MutableList<T>, private val defau
         when (getItemViewType(position)) {
             TYPE_LOAD_MORE -> {
                 holder.binding.setVariable(BR.loadMoreStateModel, loadMoreStateModel)
-                holder.binding.root.findViewById<View>(R.id.load_more_load_fail_view)?.setOnClickListener {
-                    loadMoreStateModel.startLoading()
-                    if (!mLoading) {
-                        mLoading = true
-                        recyclerView?.let { it.post { loadMoreListener?.loadMore() } }
-                            ?: loadMoreListener?.loadMore()
-                    }
-                    notifyItemChanged(getLoadMoreViewPosition())
-                }
+//                holder.binding.root.findViewById<View>(R.id.load_more_load_fail_view)?.setOnClickListener {
+//                    loadMoreStateModel.startLoading()
+//                    if (!mLoading) {
+//                        mLoading = true
+//                        recyclerView?.let { it.post { loadMoreListener?.loadMore() } }
+//                            ?: loadMoreListener?.loadMore()
+//                    }
+//                    notifyItemChanged(getLoadMoreViewPosition())
+//                }
                 holder.binding.executePendingBindings()
             }
             TYPE_HEADER_VIEW -> {

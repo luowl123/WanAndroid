@@ -19,11 +19,13 @@ import me.luowl.wan.ui.account.MineFragment
 import me.luowl.wan.ui.home.HomeFragment
 import me.luowl.wan.ui.project.ProjectFragment
 import me.luowl.wan.util.GlobalUtil
+import me.luowl.wan.util.logDebug
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mFragments: MutableList<Fragment>
     private var mCurrentTabIndex = 0
+    private val tabViews:MutableList<View> =ArrayList()
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
@@ -53,8 +55,10 @@ class MainActivity : AppCompatActivity() {
             val tabItem = binding.tabLayout.newTab()
             tabItem.text = NAV_TITLES[position]
             tabItem.setIcon(NAV_ICON_NORMAL[position])
-            tabItem.customView = createTabView(position)
+            val tabView = createTabView(position)
+            tabItem.customView = tabView
             binding.tabLayout.addTab(tabItem)
+            tabViews.add(tabView)
         }
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
@@ -99,6 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun switchFragment(fromID: Int, toID: Int) {
+        logDebug("switchFragment fromID:$fromID toID:$toID")
         if (fromID == toID || toID < 0 || toID >= NAV_TITLES.size) {
             return
         }
@@ -113,9 +118,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             transaction.show(toFragment).hide(fromFragment).commit()
         }
-        changeTabNormal(tab_layout.getTabAt(fromID)!!)
-        changeTabSelect(tab_layout.getTabAt(toID)!!)
         mCurrentTabIndex = toID
+        changeTabNormal(tab_layout.getTabAt(fromID)!!)
+        changeTabSelect(tab_layout.getTabAt(mCurrentTabIndex)!!)
+
     }
 
     private fun createTabView(position: Int): View {
@@ -130,7 +136,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeTabSelect(tab: TabLayout.Tab) {
-        tab.customView?.let {
+        tabViews[tab.position].let {
+            logDebug("changeTabSelect $mCurrentTabIndex")
             val imageView = it.findViewById(R.id.nav_icon) as ImageView
             val textView = it.findViewById(R.id.nav_text) as TextView
             textView.setTextColor(ContextCompat.getColor(this, R.color.appThemeColor))
@@ -140,14 +147,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeTabNormal(tab: TabLayout.Tab) {
-        tab.customView?.let {
+        tabViews[tab.position].let {
+            logDebug("changeTabNormal $mCurrentTabIndex")
             val imageView = it.findViewById(R.id.nav_icon) as ImageView
             val textView = it.findViewById(R.id.nav_text) as TextView
             textView.setTextColor(ContextCompat.getColor(this, R.color.color_6))
             imageView.setImageResource(NAV_ICON_NORMAL[tab.position])
             imageView.setColorFilter(ContextCompat.getColor(this, R.color.color_6))
         }
-
     }
 
     fun openNavigationPage() {
@@ -160,7 +167,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectFindFragmentPage(index: Int) {
         switchFragment(mCurrentTabIndex, 2)
-        tab_layout.getTabAt(2)?.select()
+        val tabAt = tab_layout.getTabAt(2)
+        logDebug("tab_layout.getTabAt(2):$tabAt")
+        tab_layout.selectTab(tabAt)
         val fragment = mFragments[2] as FindFragment
         if (fragment.isAdded) {
             fragment.setCurrentPage(index)

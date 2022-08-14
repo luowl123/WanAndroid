@@ -19,6 +19,7 @@ import me.luowl.wan.ui.navigation.NavigationViewModel
 import me.luowl.wan.ui.project.ProjectListViewModel
 import me.luowl.wan.ui.project.ProjectViewModel
 import me.luowl.wan.ui.search.SearchViewModel
+import me.luowl.wan.ui.webview.WebViewModel
 import me.luowl.wan.ui.wxarticle.ArticleListViewModel
 import me.luowl.wan.ui.wxarticle.WXArticleChaptersViewModel
 
@@ -70,6 +71,8 @@ class ViewModelFactory private constructor(
                     CollectionViewModel(repository)
                 isAssignableFrom(CoinViewModel::class.java) ->
                     CoinViewModel(repository)
+                isAssignableFrom(WebViewModel::class.java) ->
+                    WebViewModel()
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

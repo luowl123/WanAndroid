@@ -5,19 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.Observable
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.jeremyliao.liveeventbus.LiveEventBus
 import me.luowl.wan.AppConfig
+import me.luowl.wan.BR
 import me.luowl.wan.R
 import me.luowl.wan.event.LoginEvent
 import me.luowl.wan.ui.account.LoginActivity
 import me.luowl.wan.util.GlobalUtil
 import me.luowl.wan.util.ViewModelFactory
+import me.luowl.wan.util.logDebug
 
 /*
  *
@@ -28,13 +33,20 @@ import me.luowl.wan.util.ViewModelFactory
 
 abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
+//    val viewModel by lazy {
+//        ViewModelProviders.of(this, ViewModelFactory.getInstance()).get(getViewModelClass())
+//    }
+
     val viewModel by lazy {
-        ViewModelProviders.of(this, ViewModelFactory.getInstance()).get(getViewModelClass())
+        ViewModelProvider(this).get(getViewModelClass())
     }
 
     protected lateinit var binding: V
 
     private var viewModelId: Int = 0
+
+    private var pageStateViewStub:ViewStub? = null
+    private var isInflated:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +65,7 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        pageStateViewStub=view.findViewById(R.id.page_state_view_stub)?:null
         //私有的初始化Databinding和ViewModel方法
         initViewDataBinding()
         //初始化view
@@ -75,6 +88,7 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
         viewModelId = initVariableId()
         //关联ViewModel
         binding.setVariable(viewModelId, viewModel)
+        binding.lifecycleOwner=this
     }
 
     //刷新布局
@@ -83,6 +97,22 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
     }
 
     private fun registerUIChangeLiveDataCallBack() {
+        viewModel.stateModel.addOnPropertyChangedCallback(object : Observable.OnPropertyChangedCallback(){
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                logDebug("onPropertyChanged $isInflated")
+                pageStateViewStub?.let {
+                    if(!isInflated){
+                        logDebug("onPropertyChanged $isInflated")
+                        it.setOnInflateListener { stub, inflated ->
+                            val viewDataBinding = DataBindingUtil.bind<ViewDataBinding>(inflated)
+                            viewDataBinding?.setVariable(BR.viewModel, viewModel)
+                        }
+                        it.inflate()
+                        isInflated=true
+                    }
+                }
+            }
+        })
         viewModel.uc.showDialogEvent.observe(this, Observer {
             showDialog(it)
         })
